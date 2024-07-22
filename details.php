@@ -45,7 +45,7 @@ if (isset($_POST['submit'])) {
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="keywords" content="">
     <meta name="description" content="">
-    <title>AHNA | CAR Rental</title>
+    <title>Rental Sathi | Vehicle Rental System</title>
     <!--Bootstrap -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css" type="text/css">
     <!--Custome Style -->

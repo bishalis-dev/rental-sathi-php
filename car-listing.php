@@ -78,7 +78,7 @@ error_reporting(0);
       <aside class="col-md-3 col-md-pull-9">
         <div class="sidebar_widget bg-main">
           <div class="widget_heading">
-            <h5 class="text-main"> Find Your Car </h5>
+            <h5 class="text-main"> Find Your Vehical </h5>
           </div>
           <div class="sidebar_filter">
             <form action="search-carresult.php" method="post">

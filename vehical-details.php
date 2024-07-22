@@ -38,7 +38,7 @@ if (isset($_POST['submit'])) {
     <meta name="description" content="">
     <meta charset="UTF-8">
 
-    <title>AHNA | CAR Rental</title>
+    <title>Rental Sathi | Vehicle Rental System</title>
     <!--Bootstrap -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css" type="text/css">
     <!--Custome Style -->
@@ -364,8 +364,8 @@ if (isset($_POST['submit'])) {
                         <h3 style="color:#442;">SIMILAR CARS</h3>
                         <div class="row">
                             <?php
-                            echo $bid = $_SESSION['brndid'];
-                            echo $sql = "SELECT vehicles.vehicles_title, brands.name AS brand_name, vehicles.price_per_day, vehicles.fuel_type, vehicles.model_year, vehicles.id, vehicles.seating_capacity, vehicles.vehicles_overview, vehicles.image1 FROM vehicles JOIN brands ON brands.id = vehicles.vehicles_brand WHERE vehicles.vehicles_brand = :bid";
+                            $bid = $_SESSION['brndid'];
+                            $sql = "SELECT vehicles.vehicles_title, brands.name AS brand_name, vehicles.price_per_day, vehicles.fuel_type, vehicles.model_year, vehicles.id, vehicles.seating_capacity, vehicles.vehicles_overview, vehicles.image1 FROM vehicles JOIN brands ON brands.id = vehicles.vehicles_brand WHERE vehicles.vehicles_brand = :bid";
                             $query = $dbh->prepare($sql);
                             $query->bindParam(':bid', $bid, PDO::PARAM_STR);
                             $query->execute();

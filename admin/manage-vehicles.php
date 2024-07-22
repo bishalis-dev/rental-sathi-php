@@ -8,7 +8,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 	if (isset($_REQUEST['del'])) {
 		$delid = intval($_GET['del']);
-		$msg = "delete from vehicles WHERE id=:delid";
+		$msg = "Data Deleted Successfully!";
 		// $query = $dbh->prepare($sql);
 		// $query->bindParam(':delid', $delid, PDO::PARAM_STR);
 		// $query->execute();
