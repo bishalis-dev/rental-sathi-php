@@ -1,7 +1,16 @@
+<style>
+    div {
+        font-family: Play;
+        font-size: 20px;
+        color: BLUE;
+        object-fit: cover;
+    }
+</style>
+
 <?php
 session_start();
 include('includes/config.php');
-error_reporting(1);
+error_reporting(0);
 if (isset($_POST['submit'])) {
     $fromdate = $_POST['fromdate'];
     $todate = $_POST['todate'];
@@ -9,7 +18,7 @@ if (isset($_POST['submit'])) {
     $useremail = $_SESSION['login'];
     $status = 0;
     $vhid = $_GET['vhid'];
-    $sql = "INSERT INTO bookings (user_email, vehicle_id, start_date, end_date, message, status) VALUES (:useremail, :vhid, :fromdate, :todate, :message, :status)";
+    $sql = "INSERT INTO  tblbooking(userEmail,VehicleId,FromDate,ToDate,message,Status) VALUES(:useremail,:vhid,:fromdate,:todate,:message,:status)";
     $query = $dbh->prepare($sql);
     $query->bindParam(':useremail', $useremail, PDO::PARAM_STR);
     $query->bindParam(':vhid', $vhid, PDO::PARAM_STR);
@@ -25,19 +34,17 @@ if (isset($_POST['submit'])) {
         echo "<script>alert('Something went wrong. Please try again');</script>";
     }
 }
-
 ?>
 
 <!DOCTYPE HTML>
 <html lang="en">
 
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="keywords" content="">
     <meta name="description" content="">
-    <meta charset="UTF-8">
-
     <title>AHNA | CAR Rental</title>
     <!--Bootstrap -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css" type="text/css">
@@ -59,17 +66,11 @@ if (isset($_POST['submit'])) {
     <link rel="apple-touch-icon-precomposed" href="assets/images/favicon-icon/apple-touch-icon-57-precomposed.png">
     <link rel="shortcut icon" href="assets/images/favicon-icon/favicon.png">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        .price {
-            font-family: 'Roboto', sans-serif;
-            ;
-        }
-    </style>
+
 
 </head>
 
-<body>
+<body style="background-color:black;">
 
     <!--Header-->
     <?php include('includes/header.php'); ?>
@@ -79,23 +80,22 @@ if (isset($_POST['submit'])) {
 
     <?php
     $vhid = intval($_GET['vhid']);
-    $sql = "SELECT vehicles.*, brands.name as brand_name from vehicles join brands on brands.id = vehicles.vehicles_brand where vehicles.id = :vhid";
+    $sql = "SELECT tblvehicles.*,tblbrands.BrandName,tblbrands.id as bid  from tblvehicles join tblbrands on tblbrands.id=tblvehicles.VehiclesBrand where tblvehicles.id=:vhid";
     $query = $dbh->prepare($sql);
     $query->bindParam(':vhid', $vhid, PDO::PARAM_STR);
     $query->execute();
     $results = $query->fetchAll(PDO::FETCH_OBJ);
     $cnt = 1;
-    $query->rowCount();
     if ($query->rowCount() > 0) {
         foreach ($results as $result) {
-            $_SESSION['brndid'] = $result->vehicles_brand;
-    ?>
+            $_SESSION['brndid'] = $result->bid;
+            ?>
 
             <section id="listing_img_slider">
-                <div><img src="admin/img/vehicleimages/<?php echo htmlentities($result->image1); ?>" class="img-responsive" alt="image" width="900" height="400"></div>
-                <div><img src="admin/img/vehicleimages/<?php echo htmlentities($result->image2); ?>" class="img-responsive" alt="image" width="900" height="560"></div>
-                <div><img src="admin/img/vehicleimages/<?php echo htmlentities($result->image3); ?>" class="img-responsive" alt="image" width="900" height="560"></div>
-                <div><img src="admin/img/vehicleimages/<?php echo htmlentities($result->image4); ?>" class="img-responsive" alt="image" width="900" height="560"></div>
+                <div><img src="admin/img/vehicleimages/<?php echo htmlentities($result->Vimage1); ?>" class="img-responsive" alt="image" width="900" height="400"></div>
+                <div><img src="admin/img/vehicleimages/<?php echo htmlentities($result->Vimage2); ?>" class="img-responsive" alt="image" width="900" height="560"></div>
+                <div><img src="admin/img/vehicleimages/<?php echo htmlentities($result->Vimage3); ?>" class="img-responsive" alt="image" width="900" height="560"></div>
+                <div><img src="admin/img/vehicleimages/<?php echo htmlentities($result->Vimage4); ?>" class="img-responsive" alt="image" width="900" height="560"></div>
                 <?php if ($result->Vimage5 == "") {
                 } else {
                 ?>
@@ -113,8 +113,8 @@ if (isset($_POST['submit'])) {
                             <h2 style=" color:aqua;"><?php echo htmlentities($result->BrandName); ?> , <?php echo htmlentities($result->VehiclesTitle); ?></h2>
                         </div>
                         <div class="col-md-3">
-                            <div class="price_info price" style=" color:#442;">
-                                <p style="color:#442;">₹<?php echo htmlentities($result->price_per_day); ?> </p>Per Day Rental
+                            <div class="price_info" style=" color:aqua;">
+                                <p style="color:blue;">₹<?php echo htmlentities($result->PricePerDay); ?> </p>Per Day Rental
 
                             </div>
                         </div>
@@ -124,46 +124,46 @@ if (isset($_POST['submit'])) {
                             <div class="main_features">
                                 <ul>
 
-                                    <li style="background-color:#a041fd;"> <i class="fa fa-calendar" aria-hidden="true" style="color:#fff;"></i>
-                                        <h5><?php echo htmlentities($result->model_year); ?></h5>
-                                        <p style="color:#fff;">Reg.Year</p>
+                                    <li style="background-color:aqua;"> <i class="fa fa-calendar" aria-hidden="true" style="color:blue;"></i>
+                                        <h5><?php echo htmlentities($result->ModelYear); ?></h5>
+                                        <p style="color:blue;">Reg.Year</p>
                                     </li>
-                                    <li style="background-color:#a041fd;"> <i class="fa fa-cogs" aria-hidden="true" style="color:#fff;"></i>
+                                    <li style="background-color:aqua;"> <i class="fa fa-cogs" aria-hidden="true" style="color:blue;"></i>
                                         <h5><?php echo htmlentities($result->FuelType); ?></h5>
-                                        <p style="color:#fff;">Fuel Type</p>
+                                        <p style="color:blue;">Fuel Type</p>
                                     </li>
 
-                                    <li style="background-color:#a041fd;"> <i class="fa fa-user-plus" aria-hidden="true" style="color:#fff;"></i>
+                                    <li style="background-color:aqua;"> <i class="fa fa-user-plus" aria-hidden="true" style="color:blue;"></i>
                                         <h5><?php echo htmlentities($result->SeatingCapacity); ?></h5>
-                                        <p style="color:#fff;">Seats</p>
+                                        <p style="color:blue;">Seats</p>
                                     </li>
                                 </ul>
                             </div>
-                            <div class="listing_more_info" style="color:#fff;">
+                            <div class="listing_more_info" style="color:blue;">
                                 <div class="listing_detail_wrap" style="background-color:aqua;">
                                     <!-- Nav tabs -->
                                     <ul class="nav nav-tabs gray-bg" role="tablist">
-                                        <li role="presentation" class="active"><a href="#vehicle-overview " aria-controls="vehicle-overview" role="tab" data-toggle="tab" style="color:#fff;">Vehicle Overview </a></li>
+                                        <li role="presentation" class="active"><a href="#vehicle-overview " aria-controls="vehicle-overview" role="tab" data-toggle="tab" style="color:blue;">Vehicle Overview </a></li>
 
-                                        <li role="presentation"><a href="#accessories" aria-controls="accessories" role="tab" data-toggle="tab" style="color:#fff;">Accessories</a></li>
+                                        <li role="presentation"><a href="#accessories" aria-controls="accessories" role="tab" data-toggle="tab" style="color:blue;">Accessories</a></li>
                                     </ul>
 
                                     <!-- Tab panes -->
-                                    <div class="tab-content" style="background-color:#a041fd;">
+                                    <div class="tab-content" style="color:blue;">
                                         <!-- vehicle-overview -->
                                         <div role="tabpanel" class="tab-pane active" id="vehicle-overview">
 
-                                            <p><?php echo htmlentities($result->vehicles_overview); ?></p>
+                                            <p><?php echo htmlentities($result->VehiclesOverview); ?></p>
                                         </div>
 
 
                                         <!-- Accessories -->
                                         <div role="tabpanel" class="tab-pane" id="accessories">
                                             <!--Accessories-->
-                                            <table style="background-color:#fff;">
+                                            <table style="background-color:aqua;">
                                                 <thead>
                                                     <tr>
-                                                        <th colspan="2" style="color:#442;">Accessories</th>
+                                                        <th colspan="2" style="color:blue;">Accessories</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -171,9 +171,9 @@ if (isset($_POST['submit'])) {
                                                         <td>Air Conditioner</td>
                                                         <?php if ($result->AirConditioner >= 1) {
                                                         ?>
-                                                            <td><i class="fa fa-check" aria-hidden="true" style="color:#442;"></i></td>
+                                                            <td><i class="fa fa-check" aria-hidden="true" style="color:blue;"></i></td>
                                                         <?php } else { ?>
-                                                            <td><i class="fa fa-close" aria-hidden="true" style="color:#442;"></i></td>
+                                                            <td><i class="fa fa-close" aria-hidden="true" style="color:blue;"></i></td>
                                                         <?php } ?>
                                                     </tr>
 
@@ -181,9 +181,9 @@ if (isset($_POST['submit'])) {
                                                         <td>AntiLock Braking System</td>
                                                         <?php if ($result->AntiLockBrakingSystem >= 1) {
                                                         ?>
-                                                            <td><i class="fa fa-check" aria-hidden="true" style="color:#442;"></i></td>
+                                                            <td><i class="fa fa-check" aria-hidden="true" style="color:blue;"></i></td>
                                                         <?php } else { ?>
-                                                            <td><i class="fa fa-close" aria-hidden="true" style="color:#442;"></i></td>
+                                                            <td><i class="fa fa-close" aria-hidden="true" style="color:blue;"></i></td>
                                                         <?php } ?>
                                                     </tr>
 
@@ -191,9 +191,9 @@ if (isset($_POST['submit'])) {
                                                         <td>Power Steering</td>
                                                         <?php if ($result->PowerSteering == 1) {
                                                         ?>
-                                                            <td><i class="fa fa-check" aria-hidden="true" style="color:#442;"></i></td>
+                                                            <td><i class="fa fa-check" aria-hidden="true" style="color:blue;"></i></td>
                                                         <?php } else { ?>
-                                                            <td><i class="fa fa-close" aria-hidden="true" style="color:#442;"></i></td>
+                                                            <td><i class="fa fa-close" aria-hidden="true" style="color:blue;"></i></td>
                                                         <?php } ?>
                                                     </tr>
 
@@ -204,9 +204,9 @@ if (isset($_POST['submit'])) {
 
                                                         <?php if ($result->PowerWindows >= 1) {
                                                         ?>
-                                                            <td><i class="fa fa-check" aria-hidden="true" style="color:#442;"></i></td>
+                                                            <td><i class="fa fa-check" aria-hidden="true" style="color:blue;"></i></td>
                                                         <?php } else { ?>
-                                                            <td><i class="fa fa-close" aria-hidden="true" style="color:#442;"></i></td>
+                                                            <td><i class="fa fa-close" aria-hidden="true" style="color:blue;"></i></td>
                                                         <?php } ?>
                                                     </tr>
 
@@ -214,9 +214,9 @@ if (isset($_POST['submit'])) {
                                                         <td>CD Player</td>
                                                         <?php if ($result->CDPlayer >= 1) {
                                                         ?>
-                                                            <td><i class="fa fa-check" aria-hidden="true" style="color:#442;"></i></td>
+                                                            <td><i class="fa fa-check" aria-hidden="true" style="color:blue;"></i></td>
                                                         <?php } else { ?>
-                                                            <td><i class="fa fa-close" aria-hidden="true" style="color:#442;"></i></td>
+                                                            <td><i class="fa fa-close" aria-hidden="true" style="color:blue;"></i></td>
                                                         <?php } ?>
                                                     </tr>
 
@@ -224,9 +224,9 @@ if (isset($_POST['submit'])) {
                                                         <td>Leather Seats</td>
                                                         <?php if ($result->LeatherSeats >= 1) {
                                                         ?>
-                                                            <td><i class="fa fa-check" aria-hidden="true" style="color:#442;"></i></td>
+                                                            <td><i class="fa fa-check" aria-hidden="true" style="color:blue;"></i></td>
                                                         <?php } else { ?>
-                                                            <td><i class="fa fa-close" aria-hidden="true" style="color:#442;"></i></td>
+                                                            <td><i class="fa fa-close" aria-hidden="true" style="color:blue;"></i></td>
                                                         <?php } ?>
                                                     </tr>
 
@@ -234,9 +234,9 @@ if (isset($_POST['submit'])) {
                                                         <td>Central Locking</td>
                                                         <?php if ($result->CentralLocking == 1) {
                                                         ?>
-                                                            <td><i class="fa fa-check" aria-hidden="true" style="color:#442;"></i></td>
+                                                            <td><i class="fa fa-check" aria-hidden="true" style="color:blue;"></i></td>
                                                         <?php } else { ?>
-                                                            <td><i class="fa fa-close" aria-hidden="true" style="color:#442;"></i></td>
+                                                            <td><i class="fa fa-close" aria-hidden="true" style="color:blue;"></i></td>
                                                         <?php } ?>
                                                     </tr>
 
@@ -244,18 +244,18 @@ if (isset($_POST['submit'])) {
                                                         <td>Power Door Locks</td>
                                                         <?php if ($result->PowerDoorLocks >= 1) {
                                                         ?>
-                                                            <td><i class="fa fa-check" aria-hidden="true" style="color:#442;"></i></td>
+                                                            <td><i class="fa fa-check" aria-hidden="true" style="color:blue;"></i></td>
                                                         <?php } else { ?>
-                                                            <td><i class="fa fa-close" aria-hidden="true" style="color:#442;"></i></td>
+                                                            <td><i class="fa fa-close" aria-hidden="true" style="color:blue;"></i></td>
                                                         <?php } ?>
                                                     </tr>
                                                     <tr>
                                                         <td>Brake Assist</td>
                                                         <?php if ($result->BrakeAssist >= 1) {
                                                         ?>
-                                                            <td><i class="fa fa-check" aria-hidden="true" style="color:#442;"></i></td>
+                                                            <td><i class="fa fa-check" aria-hidden="true" style="color:blue;"></i></td>
                                                         <?php  } else { ?>
-                                                            <td><i class="fa fa-close" aria-hidden="true" style="color:#442;"></i></td>
+                                                            <td><i class="fa fa-close" aria-hidden="true" style="color:blue;"></i></td>
                                                         <?php } ?>
                                                     </tr>
 
@@ -263,9 +263,9 @@ if (isset($_POST['submit'])) {
                                                         <td>Driver Airbag</td>
                                                         <?php if ($result->DriverAirbag == 1) {
                                                         ?>
-                                                            <td><i class="fa fa-check" aria-hidden="true" style="color:#442;"></i></td>
+                                                            <td><i class="fa fa-check" aria-hidden="true" style="color:blue;"></i></td>
                                                         <?php } else { ?>
-                                                            <td><i class="fa fa-close" aria-hidden="true" style="color:#442;"></i></td>
+                                                            <td><i class="fa fa-close" aria-hidden="true" style="color:blue;"></i></td>
                                                         <?php } ?>
                                                     </tr>
 
@@ -273,9 +273,9 @@ if (isset($_POST['submit'])) {
                                                         <td>Passenger Airbag</td>
                                                         <?php if ($result->PassengerAirbag >= 1) {
                                                         ?>
-                                                            <td><i class="fa fa-check" aria-hidden="true" style="color:#442;"></i></td>
+                                                            <td><i class="fa fa-check" aria-hidden="true" style="color:blue;"></i></td>
                                                         <?php } else { ?>
-                                                            <td><i class="fa fa-close" aria-hidden="true" style="color:#442;"></i></td>
+                                                            <td><i class="fa fa-close" aria-hidden="true" style="color:blue;"></i></td>
                                                         <?php } ?>
                                                     </tr>
 
@@ -283,9 +283,9 @@ if (isset($_POST['submit'])) {
                                                         <td>Crash Sensor</td>
                                                         <?php if ($result->CrashSensor >= 1) {
                                                         ?>
-                                                            <td><i class="fa fa-check" aria-hidden="true" style="color:#442;"></i></td>
+                                                            <td><i class="fa fa-check" aria-hidden="true" style="color:blue;"></i></td>
                                                         <?php } else { ?>
-                                                            <td><i class="fa fa-close" aria-hidden="true" style="color:#442;"></i></td>
+                                                            <td><i class="fa fa-close" aria-hidden="true" style="color:blue;"></i></td>
                                                         <?php } ?>
                                                     </tr>
 
@@ -296,76 +296,53 @@ if (isset($_POST['submit'])) {
                                 </div>
 
                             </div>
-                    <?php
-                }
-            } ?>
+                        <?php 
+                    }
+        } ?>
 
                         </div>
 
+                        <!--Side-Bar-->
                         <aside class="col-md-3">
-                            <div class="sidebar_widget" style="background-color:#a041fd;">
+
+                            <div class="sidebar_widget" style="background-color:aqua;">
                                 <div class="widget_heading">
-                                    <h5 style="color:#fff;">Book Now</h5>
+                                    <h5 style="color:blue;">> Book Now</h5>
                                 </div>
                                 <form method="post">
                                     <div class="form-group">
-                                        <label for="fromdate">From Date and Time:</label>
-                                        <input type="datetime-local" class="form-control" id="fromdate" name="fromdate" required>
+                                        <input type="text" class="form-control" name="fromdate" placeholder="Date(DD/MM/YYYY) From...? " required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="todate">To Date and Time:</label>
-                                        <input type="datetime-local" class="form-control" id="todate" name="todate" required>
+                                        <input type="text" class="form-control" name="todate" placeholder="Date(DD/MM/YYYY) To...? " required>
                                     </div>
                                     <div class="form-group">
-                                        <textarea rows="3" class="form-control" name="message" placeholder="Extra Requirements..." required></textarea>
+                                        <textarea rows="3" class="form-control" name="message" placeholder="Extra Reqirements..." required></textarea>
                                     </div>
                                     <?php if ($_SESSION['login']) { ?>
                                         <div class="form-group">
-                                            <input type="submit" class="btn" name="submit" value="Book Now" style="background-color:#442;">
+                                            <input type="submit" class="btn" name="submit" value="Book Now" style="background-color:blue;">
                                         </div>
                                     <?php } else { ?>
-                                        <a href="#loginform" class="btn btn-xs uppercase" data-toggle="modal" data-dismiss="modal" style="background-color:#442;">SIGN IN FOR BOOKING</a>
+                                        <a href="#loginform" class="btn btn-xs uppercase" data-toggle="modal" data-dismiss="modal" style="background-color:blue;">SIGN IN FOR BOOKING</a>
+
                                     <?php } ?>
                                 </form>
                             </div>
                         </aside>
-
-                        <script>
-                            document.addEventListener('DOMContentLoaded', function() {
-                                function setMinDateTime() {
-                                    const now = new Date();
-                                    const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-                                    document.getElementById('fromdate').min = localDateTime;
-                                    document.getElementById('todate').min = localDateTime;
-                                }
-
-                                setMinDateTime();
-
-                                const fromDateInput = document.getElementById('fromdate');
-                                const toDateInput = document.getElementById('todate');
-
-                                fromDateInput.addEventListener('change', function() {
-                                    const selectedFromDate = new Date(fromDateInput.value);
-                                    toDateInput.min = fromDateInput.value;
-                                    if (new Date(toDateInput.value) < selectedFromDate) {
-                                        toDateInput.value = fromDateInput.value;
-                                    }
-                                });
-                            });
-                        </script>
-
+                        <!--/Side-Bar-->
                     </div>
 
                     <div class="space-20"></div>
                     <div class="divider"></div>
 
                     <!--Similar-Cars-->
-                    <div class="similar_cars" style="color:#442;">
-                        <h3 style="color:#442;">SIMILAR CARS</h3>
+                    <div class="similar_cars" style="color:blue;">
+                        <h3 style="color:blue;">SIMILAR CARS</h3>
                         <div class="row">
                             <?php
-                            echo $bid = $_SESSION['brndid'];
-                            echo $sql = "SELECT vehicles.vehicles_title, brands.name AS brand_name, vehicles.price_per_day, vehicles.fuel_type, vehicles.model_year, vehicles.id, vehicles.seating_capacity, vehicles.vehicles_overview, vehicles.image1 FROM vehicles JOIN brands ON brands.id = vehicles.vehicles_brand WHERE vehicles.vehicles_brand = :bid";
+                            $bid = $_SESSION['brndid'];
+                            $sql = "SELECT tblvehicles.VehiclesTitle,tblbrands.BrandName,tblvehicles.PricePerDay,tblvehicles.FuelType,tblvehicles.ModelYear,tblvehicles.id,tblvehicles.SeatingCapacity,tblvehicles.VehiclesOverview,tblvehicles.Vimage1 from tblvehicles join tblbrands on tblbrands.id=tblvehicles.VehiclesBrand where tblvehicles.VehiclesBrand=:bid";
                             $query = $dbh->prepare($sql);
                             $query->bindParam(':bid', $bid, PDO::PARAM_STR);
                             $query->execute();
@@ -376,27 +353,19 @@ if (isset($_POST['submit'])) {
 
                                     <div class="col-md-3 grid_listing">
                                         <div class="product-listing-m gray-bg" style="background-color:black;">
-                                            <div class="product-listing-img"> <a href="vehical-details.php?vhid=<?php echo htmlentities($result->id); ?>"><img src="admin/img/vehicleimages/<?php echo htmlentities($result->image1); ?>" class="img-responsive" alt="image" /> </a>
+                                            <div class="product-listing-img"> <a href="vehical-details.php?vhid=<?php echo htmlentities($result->id); ?>"><img src="admin/img/vehicleimages/<?php echo htmlentities($result->Vimage1); ?>" class="img-responsive" alt="image" /> </a>
                                             </div>
-                                            <div class="product-listing-content" style="background-color: #a041fd;">
-                                                <h5><a href="vehicle-details.php?vid=<?php echo htmlentities($result->id); ?>" style="color:#fff;">
-                                                        <?php echo htmlentities($result->brand_name); ?>, <?php echo htmlentities($result->vehicles_title); ?>
-                                                    </a></h5>
-                                                <p class="list-price price" style="color:#fff;">₹<?php echo htmlentities($result->price_per_day); ?></p>
+                                            <div class="product-listing-content">
+                                                <h5><a href="vehical-details.php?vhid=<?php echo htmlentities($result->id); ?>" style="color:aqua;"><?php echo htmlentities($result->BrandName); ?> , <?php echo htmlentities($result->VehiclesTitle); ?></a></h5>
+                                                <p class="list-price" style="color:blue;">₹<?php echo htmlentities($result->PricePerDay); ?></p>
 
-                                                <ul class="features_list" style="background-color:#a041fd;">
-                                                    <li style="color:#fff;"><i class="fa fa-user" aria-hidden="true" style="color:#fff;"></i>
-                                                        <?php echo htmlentities($result->seating_capacity); ?> seats
-                                                    </li>
-                                                    <li style="color:#fff;"><i class="fa fa-calendar" aria-hidden="true" style="color:#fff;"></i>
-                                                        <?php echo htmlentities($result->model_year); ?> model
-                                                    </li>
-                                                    <li style="color:#fff;"><i class="fa fa-car" aria-hidden="true" style="color:#fff;"></i>
-                                                        <?php echo htmlentities($result->fuel_type); ?>
-                                                    </li>
+                                                <ul class="features_list" style="background-color:aqua;">
+
+                                                    <li style="color:blue;"><i class="fa fa-user" aria-hidden="true" style="color:blue;"></i><?php echo htmlentities($result->SeatingCapacity); ?> seats</li>
+                                                    <li style="color:blue;"><i class="fa fa-calendar" aria-hidden="true" style="color:blue;"></i><?php echo htmlentities($result->ModelYear); ?> model</li>
+                                                    <li style="color:blue;"><i class="fa fa-car" aria-hidden="true" style="color:blue;"></i><?php echo htmlentities($result->FuelType); ?></li>
                                                 </ul>
                                             </div>
-
                                         </div>
                                     </div>
                             <?php }
