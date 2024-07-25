@@ -14,6 +14,14 @@ if (strlen($_SESSION['alogin']) == 0) {
 		// $query->execute();
 		// $msg = "Vehicle  record deleted successfully";
 	}
+	if(isset($_GET['release']) && $_GET['release'] >= 1){
+		$vid = $_GET['release']; 
+		$sql = "UPDATE vehicles set isBooked = 0 where id = '$vid'";
+		$query = $dbh->prepare($sql);
+		$query->execute();
+		$msg = "Vehicle Marked as Available";
+
+	}
 
 ?>
 
@@ -95,6 +103,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 												<th>Price Per day</th>
 												<th>Fuel Type</th>
 												<th>Model Year</th>
+												<th>Status</th>
 												<th>Action</th>
 											</tr>
 										</thead>
@@ -106,19 +115,22 @@ if (strlen($_SESSION['alogin']) == 0) {
 												<th>Price Per day</th>
 												<th>Fuel Type</th>
 												<th>Model Year</th>
+												<th>Status</th>
 												<th>Action</th>
 											</tr>
 											</tr>
 										</tfoot>
 										<tbody>
 
-											<?php $sql = "SELECT vehicles.vehicles_title, brands.name, vehicles.price_per_day, vehicles.fuel_type, vehicles.model_year, vehicles.id from vehicles join brands on brands.id = vehicles.vehicles_brand";
+											<?php $sql = "SELECT vehicles.vehicles_title, brands.name, vehicles.price_per_day, vehicles.id as vid, vehicles.isBooked, vehicles.fuel_type, vehicles.model_year, vehicles.id from vehicles join brands on brands.id = vehicles.vehicles_brand";
 											$query = $dbh->prepare($sql);
 											$query->execute();
 											$results = $query->fetchAll(PDO::FETCH_OBJ);
 											$cnt = 1;
 											if ($query->rowCount() > 0) {
-												foreach ($results as $result) {				?>
+												
+												foreach ($results as $result) {	
+														?>
 													<tr>
 														<td><?php echo htmlentities($cnt); ?></td>
 														<td><?php echo htmlentities($result->vehicles_title); ?></td>
@@ -126,8 +138,19 @@ if (strlen($_SESSION['alogin']) == 0) {
 														<td><?php echo htmlentities($result->price_per_day); ?></td>
 														<td><?php echo htmlentities($result->fuel_type); ?></td>
 														<td><?php echo htmlentities($result->model_year); ?></td>
-														<td><a href="edit-vehicle.php?id=<?php echo $result->id; ?>"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;
-															<a href="manage-vehicles.php?del=<?php echo $result->id; ?>" onclick="return confirm('Do you want to delete');"><i class="fa fa-close"></i></a>
+														<td>
+															<?php 
+															if($result->isBooked == 1){
+																?>
+																Booked! <a href="manage-vehicles.php?release=<?php echo $result->vid ?>">Make Avilable </a>
+																<?php
+															}else{
+																echo "<span class='text-success'>Available</span>";
+															}
+															?>
+														</td>
+														<td><a href="edit-vehicle.php?id=<?php echo $result->vid; ?>"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;
+															<a href="manage-vehicles.php?del=<?php echo $result->vid; ?>" onclick="return confirm('Do you want to delete');"><i class="fa fa-close"></i></a>
 														</td>
 													</tr>
 											<?php $cnt = $cnt + 1;

@@ -1,6 +1,6 @@
 <?php
 session_start();
-error_reporting(0);
+error_reporting(1);
 include('includes/config.php');
 if (strlen($_SESSION['login']) == 0) {
     header('location:index.php');
@@ -54,6 +54,18 @@ if (strlen($_SESSION['login']) == 0) {
                 flex-direction: column;
             } */
 
+            .approved {
+                background-color: green;
+                color: #fff !important;
+                display: inline-block;
+            }
+
+            .pending {
+                color: #fff !important;
+                background-color: orange;
+                display: inline-block;
+            }
+
             .booking-card {
                 display: flex;
                 align-items: center;
@@ -65,7 +77,7 @@ if (strlen($_SESSION['login']) == 0) {
             }
 
             .vehicle-image {
-               width: 35%;
+                width: 35%;
                 object-fit: cover;
                 border-right: 1px solid #eee;
             }
@@ -121,21 +133,31 @@ if (strlen($_SESSION['login']) == 0) {
                         </center>
                         <?php
                         $useremail = $_SESSION['login'];
-                        $sql = "SELECT vehicles.image1 as Vimage1, vehicles.vehicles_title, vehicles.id as vid, brands.name as BrandName, bookings.start_date, bookings.end_date, bookings.message, bookings.status FROM bookings JOIN vehicles ON bookings.vehicle_id = vehicles.id JOIN brands ON brands.id = vehicles.vehicles_brand WHERE bookings.user_email = :useremail ORDER BY bookings.id DESC";
+                        $sql = "SELECT vehicles.image1 as Vimage1, vehicles.price_per_day, vehicles.vehicles_title, vehicles.id as vid, brands.name as BrandName, bookings.start_date, bookings.end_date, bookings.message, bookings.status FROM bookings JOIN vehicles ON bookings.vehicle_id = vehicles.id JOIN brands ON brands.id = vehicles.vehicles_brand WHERE bookings.user_email = :useremail ORDER BY bookings.id DESC";
                         $query = $dbh->prepare($sql);
                         $query->bindParam(':useremail', $useremail, PDO::PARAM_STR);
                         $query->execute();
                         $results = $query->fetchAll(PDO::FETCH_OBJ);
                         $cnt = 1;
                         if ($query->rowCount() > 0) {
-                            foreach ($results as $result) {  ?>
+                            foreach ($results as $result) {
+                                $startDate = new DateTime($result->start_date);
+                                $endDate = new DateTime($result->end_date);
+                                $interval = $startDate->diff($endDate);
+                                $totalDays = $interval->days + ($interval->h / 24) + ($interval->i / 1440) + ($interval->s / 86400);
+                                $totalDays = number_format($totalDays, 2);
+                                // print_r($result);
+                                // $totalDays = $result->
+                        ?>
                                 <div class="booking-card">
                                     <img src="admin/img/vehicleimages/<?php echo htmlentities($result->Vimage1); ?>" alt="Vehicle Image" class="vehicle-image">
                                     <div class="booking-info">
-                                        <h5><?php echo htmlentities($result->BrandName); ?>, <?php echo htmlentities($result->vehicles_title); ?></h5>
+                                        <h5 style="display:flex; justify-content: space-between;"><?php echo htmlentities($result->vehicles_title) . '<span>' . ' Rs. ' . $result->price_per_day * $totalDays . '</span>';  ?></h5>
                                         <p><strong>From:</strong> <?php echo date('d M Y', strtotime(htmlentities($result->start_date))); ?></p>
                                         <p><strong>To:</strong> <?php echo date('d M Y', strtotime(htmlentities($result->end_date))); ?></p>
-                                        <p class="status <?php echo htmlentities(strtolower($result->status)); ?>"><?php echo htmlentities($result->status); ?></p>
+                                        <p class="status <?php echo $result->status ? "approved" : "pending"; ?>">
+                                            <?php echo htmlentities($result->status ? "Approved! Please carry your id card during pickup." : "Pending"); ?>
+                                        </p>
                                     </div>
                                 </div>
                         <?php }

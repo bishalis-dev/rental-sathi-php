@@ -13,7 +13,7 @@ if(isset($_POST['update']))
 $vimage1=$_FILES["img1"]["name"];
 $id=intval($_GET['imgid']);
 move_uploaded_file($_FILES["img1"]["tmp_name"],"img/vehicleimages/".$_FILES["img1"]["name"]);
-$sql="update tblvehicles set Vimage1=:vimage1 where id=:id";
+$sql="update vehicles set image1=:vimage1 where id=:id";
 $query = $dbh->prepare($sql);
 $query->bindParam(':vimage1',$vimage1,PDO::PARAM_STR);
 $query->bindParam(':id',$id,PDO::PARAM_STR);
@@ -106,7 +106,7 @@ $msg="Image updated successfully";
 												<label class="col-sm-4 control-label">Current Image1</label>
 <?php 
 $id=intval($_GET['imgid']);
-$sql ="SELECT Vimage1 from tblvehicles where tblvehicles.id=:id";
+$sql ="SELECT image1 from vehicles where vehicles.id=:id";
 $query = $dbh -> prepare($sql);
 $query-> bindParam(':id', $id, PDO::PARAM_STR);
 $query->execute();
@@ -118,7 +118,7 @@ foreach($results as $result)
 {	?>
 
 <div class="col-sm-8">
-<img src="img/vehicleimages/<?php echo htmlentities($result->Vimage1);?>" width="300" height="200" style="border:solid 1px #000">
+<img src="img/vehicleimages/<?php echo htmlentities($result->image1);?>" width="300" height="200" style="border:solid 1px #000">
 </div>
 <?php }}?>
 </div>

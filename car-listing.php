@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 include('includes/config.php');
 error_reporting(0);
@@ -52,7 +52,7 @@ error_reporting(0);
           <center><span>Choose Vehicle</span></center>
         </div>
 
-        <?php $sql = "SELECT vehicles.*, brands.name as brand_name, brands.id as brand_id from vehicles join brands on brands.id = vehicles.vehicles_brand";
+        <?php $sql = "SELECT vehicles.*, brands.name as brand_name, brands.id as brand_id from vehicles join brands on brands.id = vehicles.vehicles_brand where vehicles.isBooked=0";
         $query = $dbh->prepare($sql);
         $query->execute();
         $results = $query->fetchAll(PDO::FETCH_OBJ);
@@ -71,7 +71,7 @@ error_reporting(0);
                 <a href="vehical-details.php?vhid=<?php echo htmlentities($result->id); ?>" class="btn" style="background-color:#fff; color: #442">View Details</a>
               </div>
             </div>
-          <?php }
+        <?php }
         } ?>
       </div>
 

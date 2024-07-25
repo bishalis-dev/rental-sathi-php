@@ -59,7 +59,7 @@ if (isset($_POST['emailsubscribe'])) {
         <div class="col-md-6 col-md-push-6 text-right">
         </div>
         <div class="col-md-6 col-md-pull-6">
-          <center><p class="copy-right">Copyright &copy; 2020 AHNA car India Private Ltd. All rights reserved.</p></center>
+          <center><p class="copy-right">Copyright &copy; Rental Sathi 2024. All rights reserved.</p></center>
         </div>
       </div>
     </div>

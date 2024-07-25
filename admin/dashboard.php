@@ -1,6 +1,6 @@
 <?php
 session_start();
-error_reporting(0);
+error_reporting(1);
 include('includes/config.php');
 if (strlen($_SESSION['alogin']) == 0) {
 	header('location:index.php');
@@ -49,7 +49,19 @@ if (strlen($_SESSION['alogin']) == 0) {
 						<div class="col-md-12">
 
 							<h2 class="page-title">Dashboard</h2>
-
+							<?php
+							$sql = "SELECT * FROM bookings where status= '0'";
+							$query = $dbh->prepare($sql);
+							$query->execute();
+							$results = $query->fetchAll(PDO::FETCH_OBJ);
+							$count = $query->rowCount();
+							// var_dump($count); 
+							if ($count > 0) {
+								$msg = "Received $count New Booking Request! <a href='manage-bookings.php'>Click here</a> to view";
+								echo "<div class='alert alert-success'>
+									$msg
+									</div>";
+							}								?>
 							<div class="row">
 								<div class="col-md-12">
 									<div class="row">

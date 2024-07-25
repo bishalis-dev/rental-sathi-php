@@ -1,6 +1,6 @@
 <?php
 session_start();
-error_reporting(0);
+error_reporting(1);
 include('includes/config.php');
 
 if (strlen($_SESSION['alogin']) == 0) {
@@ -31,7 +31,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 		$crashcensor = isset($_POST['crashcensor']) ? 1 : 0;
 		$leatherseats = isset($_POST['leatherseats']) ? 1 : 0;
 
-		$upload_dir = "img/vehicleimages/";
+		$upload_dir = "./img/vehicleimages/";
 		$upload_ok = true;
 		$upload_ok = move_uploaded_file($_FILES["img1"]["tmp_name"], $upload_dir . $vimage1);
 		$upload_ok = move_uploaded_file($_FILES["img2"]["tmp_name"], $upload_dir . $vimage2);
@@ -40,8 +40,8 @@ if (strlen($_SESSION['alogin']) == 0) {
 		// var_dump($upload_ok);
 		// echo $_FILES["img1"]["tmp_name"] . $upload_dir . $vimage1;
 		if ($upload_ok) {
-			$sql = "INSERT INTO vehicles (vehicles_title, vehicles_brand, vehicles_overview, price_per_day, fuel_type, model_year, seating_capacity, image1, image2, image3, image4, air_conditioner, power_door_locks, anti_lock_braking_system, brake_assist, power_steering, driver_airbag, passenger_airbag, power_windows, cd_player, central_locking, crash_sensor, leather_seats)
-                    VALUES (:vehicletitle, :brand, :vehicleoverview, :priceperday, :fueltype, :modelyear, :seatingcapacity, :vimage1, :vimage2, :vimage3, :vimage4, :vimage5, :airconditioner, :powerdoorlocks, :antilockbrakingsys, :brakeassist, :powersteering, :driverairbag, :passengerairbag, :powerwindow, :cdplayer, :centrallocking, :crashcensor, :leatherseats)";
+			echo $sql = "INSERT INTO vehicles (vehicles_title, vehicles_brand, vehicles_overview, price_per_day, fuel_type, model_year, seating_capacity, image1, image2, image3, air_conditioner, power_door_locks, anti_lock_braking_system, brake_assist, driver_airbag, passenger_airbag)
+                    VALUES (:vehicletitle, :brand, :vehicleoverview, :priceperday, :fueltype, :modelyear, :seatingcapacity, :image1, :image2, :image3, :airconditioner, :powerdoorlocks, :antilockbrakingsys, :brakeassist, :driverairbag, :passengerairbag)";
 			$query = $dbh->prepare($sql);
 			$query->bindParam(':vehicletitle', $vehicletitle, PDO::PARAM_STR);
 			$query->bindParam(':brand', $brand, PDO::PARAM_INT);
@@ -50,22 +50,15 @@ if (strlen($_SESSION['alogin']) == 0) {
 			$query->bindParam(':fueltype', $fueltype, PDO::PARAM_STR);
 			$query->bindParam(':modelyear', $modelyear, PDO::PARAM_INT);
 			$query->bindParam(':seatingcapacity', $seatingcapacity, PDO::PARAM_INT);
-			$query->bindParam(':vimage1', $vimage1, PDO::PARAM_STR);
-			$query->bindParam(':vimage2', $vimage2, PDO::PARAM_STR);
-			$query->bindParam(':vimage3', $vimage3, PDO::PARAM_STR);
-			$query->bindParam(':vimage4', $vimage4, PDO::PARAM_STR);
+			$query->bindParam(':image1', $vimage1, PDO::PARAM_STR);
+			$query->bindParam(':image2', $vimage2, PDO::PARAM_STR);
+			$query->bindParam(':image3', $vimage3, PDO::PARAM_STR);
 			$query->bindParam(':airconditioner', $airconditioner, PDO::PARAM_INT);
 			$query->bindParam(':powerdoorlocks', $powerdoorlocks, PDO::PARAM_INT);
 			$query->bindParam(':antilockbrakingsys', $antilockbrakingsys, PDO::PARAM_INT);
 			$query->bindParam(':brakeassist', $brakeassist, PDO::PARAM_INT);
-			$query->bindParam(':powersteering', $powersteering, PDO::PARAM_INT);
 			$query->bindParam(':driverairbag', $driverairbag, PDO::PARAM_INT);
 			$query->bindParam(':passengerairbag', $passengerairbag, PDO::PARAM_INT);
-			$query->bindParam(':powerwindow', $powerwindow, PDO::PARAM_INT);
-			$query->bindParam(':cdplayer', $cdplayer, PDO::PARAM_INT);
-			$query->bindParam(':centrallocking', $centrallocking, PDO::PARAM_INT);
-			$query->bindParam(':crashcensor', $crashcensor, PDO::PARAM_INT);
-			$query->bindParam(':leatherseats', $leatherseats, PDO::PARAM_INT);
 			$query->execute();
 			$lastInsertId = $dbh->lastInsertId();
 			if ($lastInsertId) {

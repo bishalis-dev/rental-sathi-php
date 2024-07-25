@@ -92,10 +92,6 @@ if (isset($_POST['signup'])) {
                 <div class="form-group">
                   <input type="password" class="form-control" name="confirmpassword" placeholder="Confirm Password" required="required">
                 </div>
-                <div class="form-group checkbox">
-                  <input type="checkbox" id="terms_agree" required="required" checked="">
-                  <label for="terms_agree" style="color:#fff;">I Agree with <a href="#" style="color:#442;">Terms and Conditions</a></label>
-                </div>
                 <div class="form-group">
                   <input type="submit" value="Sign Up" name="signup" id="submit" class="btn btn-block" style="background-color:#f3f3f3; color:#442">
                 </div>

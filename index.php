@@ -38,7 +38,7 @@ error_reporting(0);
             position: relative;
             width: 100%;
             height: 80vh;
-            background: url('https://images.pexels.com/photos/120049/pexels-photo-120049.jpeg?cs=srgb&dl=pexels-mikebirdy-120049.jpg&fm=jpg') no-repeat center center/cover;
+            background: url('https://c4.wallpaperflare.com/wallpaper/66/25/239/machine-grey-background-volvo-wallpaper-preview.jpg') no-repeat center center/cover;
         }
 
         .banner-content {
