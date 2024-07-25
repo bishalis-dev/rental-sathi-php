@@ -134,7 +134,7 @@ if (isset($_POST['submit'])) {
                         </div>
                         <div class="col-md-3">
                             <div class="price_info price" style=" color:#442;">
-                                <p style="color:#442;">₹<?php echo htmlentities($result->price_per_day); ?> </p>Per Day Rental
+                                <p style="color:#442;">Rs. <?php echo htmlentities($result->price_per_day); ?> </p>Per Day Rental
 
                             </div>
                         </div>

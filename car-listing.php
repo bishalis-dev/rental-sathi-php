@@ -62,7 +62,7 @@ error_reporting(0);
               <div class="product-listing-img"><img src="admin/img/vehicleimages/<?php echo htmlentities($result->image1); ?>" class="img-responsive" alt="Image" /></div>
               <div class="product-listing-content">
                 <h5><a href="vehical-details.php?vhid=<?php echo htmlentities($result->id); ?>"><?php echo htmlentities($result->brand_name); ?>, <?php echo htmlentities($result->vehicles_title); ?></a></h5>
-                <p class="list-price">₹<?php echo htmlentities($result->price_per_day); ?> Per Day Rental</p>
+                <p class="list-price">Rs. <?php echo htmlentities($result->price_per_day); ?> Per Day Rental</p>
                 <ul>
                   <li><i class="fa fa-user" aria-hidden="true"></i><?php echo htmlentities($result->seating_capacity); ?> seats</li>
                   <li><i class="fa fa-calendar" aria-hidden="true"></i><?php echo htmlentities($result->model_year); ?> model</li>
