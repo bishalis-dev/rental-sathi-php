@@ -51,10 +51,6 @@ if (isset($_POST['login'])) {
                 <div class="form-group">
                   <input type="password" class="form-control" name="password" placeholder="Password" required>
                 </div>
-                <div class="form-group checkbox">
-                  <input type="checkbox" id="remember">
-                  <label for="remember">Remember Me</label>
-                </div>
                 <div class="form-group">
                   <input type="submit" name="login" value="Sign In" class="btn btn-block" style="background-color:#f3f3f3; color: #442">
                 </div>
